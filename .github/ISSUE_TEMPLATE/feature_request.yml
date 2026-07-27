@@ -1,0 +1,52 @@
+name: Feature Request
+description: Suggest an idea or enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Concrete implementation checklist — files, endpoints, function signatures, edge/failure behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: "Testable checklist: how do we know this is done? Include the tests to write."
+    validations:
+      required: true
+
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: 'Issues that must land first, e.g. "Depends on #14, #25".'
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative approaches?
+    validations:
+      required: false
+
+  - type: textarea
+    id: value
+    attributes:
+      label: Business or User Value
+      description: Who benefits and how?
+    validations:
+      required: false

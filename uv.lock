@@ -1,0 +1,31 @@
+version = 1
+revision = 3
+requires-python = "==3.12.*"
+
+[manifest]
+members = [
+    "app",
+    "engine",
+    "simple-sermon-translator",
+]
+
+[[package]]
+name = "app"
+version = "0.1.0"
+source = { editable = "app" }
+dependencies = [
+    { name = "engine" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "engine", editable = "engine" }]
+
+[[package]]
+name = "engine"
+version = "0.1.0"
+source = { editable = "engine" }
+
+[[package]]
+name = "simple-sermon-translator"
+version = "0.1.0"
+source = { virtual = "." }
