@@ -434,6 +434,26 @@ Before beginning a substantial change:
 
 Detailed contribution guidelines may be moved into `CONTRIBUTING.md` as the contributor community grows.
 
+## Workflow Conventions
+
+This repo uses an issue-driven workflow. The issue number is the source of truth.
+
+Issues: clear, intent-focused titles (e.g. `#123 Add retry logic to uploads`)
+
+Branches:
+<type>/<issue>-<desc>
+Types: feat, fix, refactor, chore, docs, test
+Example: feat/123-upload-retry
+
+Commits:
+#123 Short, descriptive message
+
+Pull Requests:
+Title: #123 Short description
+Description: Closes #123
+
+All work should reference its issue number.
+
 ## Reporting Bugs
 
 When reporting a bug, include:
