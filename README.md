@@ -140,11 +140,11 @@ The application depends on the local engine workspace member.
 
 [project]
 dependencies = [
-    "engine",
+    "sermon-engine",
 ]
 
 [tool.uv.sources]
-engine = { workspace = true }
+sermon-engine = { workspace = true }
 ```
 
 ## Development Setup
@@ -179,13 +179,13 @@ uv run python --version
 ### Add a dependency to the engine
 
 ```bash
-uv add --package engine <dependency>
+uv add --package sermon-engine <dependency>
 ```
 
 ### Add a dependency to the application
 
 ```bash
-uv add --package app <dependency>
+uv add --package sermon-app <dependency>
 ```
 
 Additional test, lint, benchmark, and application commands will be documented as those commands are implemented.
