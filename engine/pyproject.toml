@@ -1,13 +1,16 @@
 [project]
-name = "engine"
+name = "sermon-engine"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple sermon translator's engine, responsible for the actual translation work."
 readme = "README.md"
 authors = [
     { name = "victor", email = "93vitinho2012@gmail.com" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = []
+
+[project.scripts]
+sermon-engine = "sermon_engine:main"
 
 [build-system]
 requires = ["uv_build>=0.11.7,<0.12.0"]

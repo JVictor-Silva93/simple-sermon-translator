@@ -4,24 +4,24 @@ requires-python = "==3.12.*"
 
 [manifest]
 members = [
-    "app",
-    "engine",
+    "sermon-app",
+    "sermon-engine",
     "simple-sermon-translator",
 ]
 
 [[package]]
-name = "app"
+name = "sermon-app"
 version = "0.1.0"
 source = { editable = "app" }
 dependencies = [
-    { name = "engine" },
+    { name = "sermon-engine" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "engine", editable = "engine" }]
+requires-dist = [{ name = "sermon-engine", editable = "engine" }]
 
 [[package]]
-name = "engine"
+name = "sermon-engine"
 version = "0.1.0"
 source = { editable = "engine" }
 

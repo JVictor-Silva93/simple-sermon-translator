@@ -1,21 +1,21 @@
 [project]
-name = "app"
+name = "sermon-app"
 version = "0.1.0"
-description = "Add your description here"
+description = "Simple live sermon translate, app portion. Front facing and used by users."
 readme = "README.md"
 authors = [
     { name = "victor", email = "93vitinho2012@gmail.com" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = [
-    "engine",
+    "sermon-engine",
 ]
 
 [tool.uv.sources]
-engine = { workspace = true }
+sermon-engine = { workspace = true }
 
 [project.scripts]
-app = "app:main"
+sermon-app = "app:main"
 
 [build-system]
 requires = ["uv_build>=0.11.7,<0.12.0"]
