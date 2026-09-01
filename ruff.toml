@@ -1,0 +1,9 @@
+target-version = "py312"
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # Pyflakes
+    "I",   # import sorting
+    "UP",  # pyupgrade
+]

@@ -1,4 +1,6 @@
 # app/tests/test_import.py
+from importlib import import_module
+
 
 def test_sermon_app_imports():
-    import sermon_app
+    import_module("sermon_app")
