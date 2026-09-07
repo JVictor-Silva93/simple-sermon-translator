@@ -14,3 +14,15 @@ members = [
     "engine",
     "app",
 ]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "engine/tests",
+    "app/tests",
+]
+
+[dependency-groups]
+dev = [
+  "pytest",
+  "ruff",
+]
