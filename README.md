@@ -12,7 +12,7 @@ A church connects a soundboard or microphone feed to the application. Congregati
 The project aims to provide:
 
 * Real-time speech transcription.
-* Spanish and Portuguese translation.
+* Spanish and Portuguese translation (to start, but it should be easy to add more).
 * Optional text-to-speech output.
 * A simple browser interface for listeners.
 * Local operation on a computer at the church.
@@ -28,9 +28,6 @@ The project is divided into two Python components and a collection of deployment
 simple_sermon_translator/
 ├── engine/
 ├── app/
-├── deployments/
-├── docs/
-├── scripts/
 ├── pyproject.toml
 ├── uv.lock
 └── README.md
@@ -71,21 +68,6 @@ Its intended responsibilities include:
 
 The application uses the engine through its public Python interface. It does not load or call machine-learning models directly.
 
-### Deployments
-
-The `deployments` directory contains packaging and infrastructure configuration.
-
-Planned deployment targets include:
-
-```text
-deployments/
-├── docker/
-├── gcp/
-└── windows/
-```
-
-This directory is not a Python package and is not a member of the uv workspace.
-
 ## Operating Modes
 
 The same FastAPI application is intended to support two modes.
@@ -112,41 +94,6 @@ In cloud mode:
 
 Cloud mode is a deployment option, not a vendor-operated SaaS.
 
-## uv Workspace
-
-This repository uses a uv workspace containing two members:
-
-```toml
-[tool.uv.workspace]
-members = [
-    "engine",
-    "app",
-]
-```
-
-Each member has its own `pyproject.toml` and declares its own direct dependencies.
-
-The workspace shares:
-
-* One `uv.lock` file.
-* One default `.venv`.
-* One compatible dependency resolution.
-* Shared development dependencies.
-
-The application depends on the local engine workspace member.
-
-```toml
-# app/pyproject.toml
-
-[project]
-dependencies = [
-    "sermon-engine",
-]
-
-[tool.uv.sources]
-sermon-engine = { workspace = true }
-```
-
 ## Development Setup
 
 ### Requirements
@@ -156,39 +103,6 @@ sermon-engine = { workspace = true }
 * Git
 
 GPU acceleration and model-specific native dependencies will be documented after the initial compatibility experiments are complete.
-
-### Clone the repository
-
-```bash
-git clone https://github.com/JVictor-Silva93/simple-sermon-translator.git
-cd simple_sermon_translator
-```
-
-### Install the workspace
-
-```bash
-uv sync --all-packages
-```
-
-### Confirm the Python environment
-
-```bash
-uv run python --version
-```
-
-### Add a dependency to the engine
-
-```bash
-uv add --package sermon-engine <dependency>
-```
-
-### Add a dependency to the application
-
-```bash
-uv add --package sermon-app <dependency>
-```
-
-Additional test, lint, benchmark, and application commands will be documented as those commands are implemented.
 
 ## Development Principles
 
@@ -227,64 +141,72 @@ The first release will use finalized speech segments. Continuously changing part
 
 ## Roadmap
 
+The roadmap follows YAGNI: build the smallest working vertical slice, validate
+it, and add complexity only when a demonstrated requirement calls for it.
+Technical choices are evaluated in the phase that uses them rather than in a
+large up-front compatibility project.
+
 ### Phase 0 — Compatibility and hardware spike
 
-Determine whether the proposed tools can operate together and keep up with real-time audio.
+Prepare only what is needed to begin engine development:
 
-Planned work:
+* confirm that the `uv` workspace installs both packages;
+* settle the public package and command names;
+* add the basic lint and test commands used by the first implementation work;
+* add a small CI check for those commands;
+* document the supported development Python version.
 
-* Confirm the supported Python version.
-* Compare faster-whisper and alternative transcription implementations.
-* Test the selected translation model.
-* Test Spanish and Portuguese translation quality.
-* Test the selected TTS implementation.
-* Pin compatible PyTorch and CUDA versions.
-* Measure CPU, system memory, and GPU memory usage.
-* Calculate the real-time factor of the complete pipeline.
-* Test browser-based audio capture for cloud mode.
-* Document model licenses and redistribution restrictions.
+Do not select or benchmark translation, TTS, cloud-audio, or deployment tools in this phase.
 
-**Deliverable:** A technical decision and benchmark report.
+**Deliverable:** A clean workspace in which both packages import and the basic development checks run successfully.
 
-### Phase 1 — Transcription engine and CLI
+### Phase 1 — Engine transcription CLI
 
 Build:
 
-* Audio-device enumeration.
-* Local audio capture.
-* Speech segmentation.
-* Transcription.
-* Typed engine events.
-* Session startup and shutdown.
-* A basic command-line interface.
+* audio-device enumeration.
+* local audio capture.
+* audio normalization and segmentation;
+* speech segmentation.
+* one plausible transcription implementation;
+* typed caption events;
+* engine CLI;
+* clean session shutdown;
+* focused tests for the behavior introduced in this phase.
 
-**Deliverable:** Live microphone audio produces finalized captions in the terminal.
+**Deliverable:**
+
+```bash
+sermon-engine listen
+```
+
+prints finalized live captions in the terminal with enough timing information to identify whether transcription is falling behind real time.
 
 ### Phase 2 — Translation
 
 Build:
 
-* Translation interface.
-* Spanish translation.
-* Portuguese translation.
-* Translation events.
-* Language configuration.
-* Translation tests.
+* one plausible translation implementation;
+* initial Spanish support;
+* initial Portuguese support;
+* translation events;
+* language configuration;
+* focused translation tests.
 
-**Deliverable:** Live microphone audio produces translated terminal captions.
+**Deliverable:** Live local audio produces translated terminal captions in Spanish and Portuguese.
 
-### Phase 3 — Local browser application
+### Phase 3 — Local FastAPI application
 
 Build:
 
-* Minimal FastAPI application.
-* Operator page.
-* Start and stop controls.
-* Audio-device selection.
-* Listener page.
-* Caption WebSocket.
-* Listener QR code.
-* Local-network access.
+* minimal operator page;
+* start and stop controls;
+* audio-device selection;
+* listener join page;
+* caption WebSocket;
+* listener QR code;
+* local-network operation;
+* focused application and WebSocket tests.
 
 **Deliverable:** A listener can read translated captions from a phone connected to the church network.
 
@@ -292,105 +214,95 @@ Build:
 
 Build:
 
-* TTS engine interface.
-* Translated audio events.
-* Browser audio playback.
-* Audio buffering and sequencing.
-* Per-language TTS controls.
-* TTS performance benchmark.
+* one plausible TTS implementation for the supported languages;
+* TTS engine interface;
+* translated audio events;
+* audio buffering and sequencing;
+* browser playback;
+* per-language TTS enablement;
+* end-to-end timing measurement with TTS enabled.
 
-**Deliverable:** A listener can hear translated audio through the browser.
+**Deliverable:** A listener can hear translated audio from the phone browser without the pipeline continually falling behind.
 
 ### Phase 5 — Setup and reliability
 
 Build:
 
-* First-run setup.
-* Input-level testing.
-* Hardware benchmarking.
-* Recommended hardware profiles.
-* Settings persistence.
-* Automatic reconnection.
-* Operator diagnostics.
-* Error recovery.
-* Exportable support logs.
+* first-run setup;
+* audio-level testing;
+* download and checksum verification for the models actually in use;
+* a hardware benchmark based on the working pipeline;
+* a recommended capability profile;
+* settings persistence;
+* automatic WebSocket reconnection;
+* diagnostics and operator monitoring;
+* recovery for failures observed during development and local testing.
 
 **Deliverable:** A church operator can configure and run the application without editing source code.
 
-### Phase 6 — Cloud mode
+### Phase 6 — Windows packaging and local pilot
+
+Add:
+
+* a Windows packaging approach for the working local application;
+* persistent application, configuration, and model directories;
+* model setup during or after installation;
+* startup and uninstall support;
+* installation and operator documentation;
+* the fixes required by testing with participating churches.
+
+Do not build a general-purpose updater or distribution service unless pilot experience demonstrates that it is needed.
+
+**Deliverable:** A participating church can install and evaluate the local application on a supported Windows computer.
+
+### Phase 7 — Cloud mode
 
 Build:
 
-* Network audio input.
-* Authenticated audio connections.
-* Operator authentication.
-* Public listener sessions.
-* HTTPS support.
-* Cloud-specific configuration and health reporting.
+* pushed-audio engine source;
+* authenticated cloud audio endpoint;
+* the smallest browser audio-capture implementation needed to test real church input;
+* public listener sessions;
+* operator authentication;
+* HTTPS deployment;
+* cloud-specific health reporting;
+* connection and message limits appropriate for a public service.
 
 **Deliverable:** Audio sent to a GPU server produces translated captions on listener devices.
 
-### Phase 7 — GCP deployment
+### Phase 8 — GCP deployment
 
 Build:
 
-* GPU-compatible Docker image.
-* Persistent model storage.
-* VM startup configuration.
-* Automatic shutdown.
-* Firewall and HTTPS configuration.
-* Deployment and upgrade documentation.
-* Cost-control guidance.
+* Docker image;
+* GPU VM deployment configuration;
+* persistent model storage;
+* startup automation;
+* shutdown automation;
+* documented cost controls;
+* upgrade procedure;
+* recovery instructions based on the selected deployment design.
+* firewall and HTTPS configuration.
+* deployment and upgrade documentation.
+* cost-control guidance.
 
-**Deliverable:** An organization can deploy the application into its own GCP project.
+**Deliverable:** A church can deploy the project into its own GCP account using documented commands.
 
-### Phase 8 — Windows packaging and stable release
+### Phase 9 — Stable version-one release
 
-Build:
+Complete the work required to support the already-built version-one features:
 
-* Windows packaging.
-* Model installation workflow.
-* Release automation.
-* Upgrade instructions.
-* Stable user documentation.
+* release automation;
+* supported-hardware and known-limitations documentation;
+* security and privacy review;
+* accessibility and low-powered-phone testing;
+* installation, operation, upgrade, and troubleshooting documentation;
+* signed release artifacts where practical;
+* final license, contribution, security, and model-license documentation.
 
-**Deliverable:** A stable version suitable for testing with participating churches.
+**Deliverable:** A stable open-source release supporting local Windows operation and a documented GCP deployment.
 
-## Version-One Scope
-
-The planned first stable version includes:
-
-* Local audio capture.
-* Network audio input for cloud mode.
-* Finalized live captions.
-* Spanish translation.
-* Portuguese translation.
-* Optional translated audio.
-* Operator and listener browser interfaces.
-* Local-network operation.
-* Docker packaging.
-* A documented GCP deployment.
-* Windows as the primary local platform.
-* Hardware benchmarking and capability reporting.
-* Model checksum verification.
-* Connection recovery and diagnostic logging.
-
-## Not Planned for Version One
-
-The following are intentionally outside the initial scope:
-
-* Vendor-operated SaaS.
-* Subscription billing.
-* Django.
-* Native mobile applications.
-* Voice cloning.
-* Multiple voices per language.
-* Long-term sermon storage.
-* Analytics dashboards.
-* OBS or ProPresenter integration.
-* Partial captions.
-* Automatic multi-server scaling.
-* Multiple simultaneous sermons in one process.
+---
 
 ## Model Files and Licenses
 
