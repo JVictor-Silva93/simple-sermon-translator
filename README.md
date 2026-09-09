@@ -323,13 +323,6 @@ Users are responsible for complying with the licenses of the models they downloa
 
 The application should process sermon audio without retaining it by default.
 
-The project should not store the following unless an operator explicitly enables storage:
-
-* Raw sermon audio.
-* Complete transcripts.
-* Translated transcripts.
-* Generated translated audio.
-
 Diagnostic logs should contain performance and error information without unnecessarily including sermon content.
 
 ## Contributing
@@ -407,6 +400,10 @@ Only the next one or two phases are broken down in detail. Later phases remain b
 
 ## License
 
-The source-code license has not yet been finalized.
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
 
-A `LICENSE` file will be added before the project accepts outside contributions or publishes a stable release. Model files remain governed by their respective licenses regardless of the license selected for this repository.
+You are free to use, modify, and distribute this software, including for commercial purposes, subject to the terms of the AGPL-3.0. Modified versions that are distributed or made available to users over a network must make their corresponding source code available under the same license.
+
+See the [LICENSE](LICENSE) file for the full license terms.
+
+Model files and other third-party components remain governed by their respective licenses.
